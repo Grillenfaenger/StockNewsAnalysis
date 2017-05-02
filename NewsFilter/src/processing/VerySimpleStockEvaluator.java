@@ -10,10 +10,10 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TreeMap;
 
-import Exceptions.NoQuoteDataException;
 import data.quotes.CompanyStockTables;
 import data.quotes.StockTable;
 import data.quotes.StockValueCore;
+import exceptions.NoQuoteDataException;
 
 public class VerySimpleStockEvaluator extends StockEvaluatur {
 
@@ -25,13 +25,17 @@ public class VerySimpleStockEvaluator extends StockEvaluatur {
 	}
 	
 	@Override
-	public boolean getEvaluation(String ric, LocalDateTime articleDate) {
+	public boolean getEvaluation(String ric, LocalDateTime articleDate) throws NoQuoteDataException {
 		
 		LocalDate articleDay = articleDate.toLocalDate();
 		StockTable ricQuotes = cst.companyStocks.get(ric);
 		
-		float courseBefore = getcourseBefore(articleDay, ricQuotes);
-		float courseAfter = getCourseAfter(articleDay, ricQuotes);
+		if(ricQuotes ==null){
+			throw new NoQuoteDataException("No Quote Data for " + ric);
+		}
+		
+		float courseBefore = getcourseBefore(ric, articleDay, ricQuotes);
+		float courseAfter = getCourseAfter(ric, articleDay, ricQuotes);
 		
 		if(courseAfter > courseBefore){
 			System.out.println("evaluation: true, "+ courseAfter + " > " + courseBefore);
@@ -42,18 +46,19 @@ public class VerySimpleStockEvaluator extends StockEvaluatur {
 		else return true;
 	}
 
-	private float getcourseBefore(LocalDate articleDay, StockTable ricQuotes) {
+	private float getcourseBefore(String ric, LocalDate articleDay, StockTable ricQuotes) throws NoQuoteDataException {
+		
 		LocalDate justBefore = ricQuotes.stockTable.lowerKey(articleDay);
 		if(justBefore.equals(null)){
-			throw new NoQuoteDataException(articleDay.toString());
+			throw new NoQuoteDataException("No Quote Data for " + ric + " on " + articleDay.toString() + "/n Update quote data first!");
 		}
 		return ricQuotes.stockTable.get(justBefore).getClose();
 	}
 
-	private float getCourseAfter(LocalDate articleDay, StockTable ricQuotes) {
+	private float getCourseAfter(String ric, LocalDate articleDay, StockTable ricQuotes) throws NoQuoteDataException {
 		LocalDate justAfter = ricQuotes.stockTable.higherKey(articleDay);
 		if(justAfter.equals(null)){
-			throw new NoQuoteDataException(articleDay.toString());
+			throw new NoQuoteDataException("No Quote Data for " + ric + " on " + articleDay.toString()+"/n Update quote data first!");
 		}
 		return ricQuotes.stockTable.get(justAfter).getOpen();
 	}

@@ -1,25 +1,20 @@
 package applications;
 
 import java.io.IOException;
-import java.sql.Connection;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import io.YahooQuoteCrawler;
 import data.Article;
 import data.Frequency;
 import data.quotes.StockValueExtended;
-import io.DbConnector;
 import io.FileUtils;
 import io.QuoteCSVReader;
 import io.XLSReader;

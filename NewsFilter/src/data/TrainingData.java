@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import exceptions.NoQuoteDataException;
 import processing.StockEvaluatur;
 
 public class TrainingData {
@@ -16,7 +17,7 @@ public class TrainingData {
 	private LocalDateTime date;
 	private String ric;
 	
-	public TrainingData(String ric, Article article, StockEvaluatur eval) throws Exception{
+	public TrainingData(String ric, Article article, StockEvaluatur eval) throws NoQuoteDataException{
 		this.id = UUID.randomUUID();
 		article.setId(id);
 		this.content = article.getContent();

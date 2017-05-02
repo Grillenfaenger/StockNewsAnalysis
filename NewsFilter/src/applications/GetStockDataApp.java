@@ -31,12 +31,12 @@ public class GetStockDataApp {
 	
 private static void getCourseFromYahoo(List<String> rics, Calendar start, Calendar end, Frequency frq) throws IOException{
 		
+		// List of rics for which NO DATA could be found
 		List<String> nodata = new ArrayList<String>();
+		// List of rics for which data had been downloaded
 		List<String> data = new ArrayList<String>();
 		
-		int month = start.get(Calendar.MONTH);
-		
-		System.out.println(month);
+		System.out.println(start.getMaximum(Calendar.MONTH));
 		System.out.println(start.get(Calendar.DAY_OF_MONTH));
 		System.out.println(start.get(Calendar.YEAR));
 		
@@ -44,6 +44,7 @@ private static void getCourseFromYahoo(List<String> rics, Calendar start, Calend
 		System.out.println(end.get(Calendar.DAY_OF_MONTH));
 		System.out.println(end.get(Calendar.YEAR));
 		
+		// Stocks traded on NYSE are listed without .N suffix on yahoo finaces
 		for (String ric : rics) {
 			if(ric.endsWith(".N")){
 				ric = ric.substring(0, ric.length()-2);
@@ -56,9 +57,9 @@ private static void getCourseFromYahoo(List<String> rics, Calendar start, Calend
 			}
 		}
 		
-		System.out.println(data.size());
+		System.out.println("Downloaded quotes for "+  data.size() + " companies");
 		FileUtils.printList(data, "output/", "data", ".txt");
-		System.out.println(nodata.size());
+		System.out.println("Unable to find any data for " + nodata.size() + " Rics.");
 		FileUtils.printList(nodata, "output/", "nodata", ".txt");
 		
 	}
