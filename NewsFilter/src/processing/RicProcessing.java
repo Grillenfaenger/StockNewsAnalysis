@@ -22,12 +22,11 @@ public class RicProcessing {
 	public static enum Keyword{RIC, TAG};
 	static Pattern pattern = Pattern.compile("(.*?)<(.*?)>");
 	
-	public static List<String> getIndices(List<String> rics, Map<String,Set<String>> ricNames) throws IOException{
+	public static List<String> getIndices(List<String> rics) throws IOException{
 		List<String> indices = new ArrayList<String>();
 		
 		for(String ric : rics){
 			if(ric.startsWith(".")||ric.contains("=")){
-				System.out.println(ricNames.get(ric));
 				indices.add(ric);
 			}
 		}
@@ -36,7 +35,9 @@ public class RicProcessing {
 		return indices;
 	}
 	
-	public static List<Article> filterIndicesFromNews(List<Article> articles, List<String> indices) throws ParseException, IOException{
+	public static List<Article> filterIndicesFromNews(List<Article> articles) throws ParseException, IOException{
+		
+		List<String> indices = getIndices(new ArrayList<String>(RicProcessing.createRicSet(articles)));
 		
 		Set<String> ricsCopy = new HashSet<String>();
 		

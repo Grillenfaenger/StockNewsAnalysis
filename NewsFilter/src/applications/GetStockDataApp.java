@@ -1,24 +1,42 @@
 package applications;
 
 import io.FileUtils;
+import io.XLSReader;
 import io.YahooQuoteCrawler;
 
+import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import processing.RicProcessing;
+import data.Article;
 import data.Frequency;
 
 public class GetStockDataApp {
 	
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, ParseException {
 		
-		List<String> rics = FileUtils.fileToList("output/rics.txt");
-		Set<String> ricSet =  new HashSet<String>();
-		ricSet.addAll(rics);
+		List<String> rics = null;
+		Set<String> ricSet = null;
+		
+		String ricFilePath = "output/rics.txt";
+		File ricFile = new File(ricFilePath);
+		if(ricFile.exists()){
+			rics = FileUtils.fileToList(ricFilePath);
+			ricSet= new HashSet<String>();
+			ricSet.addAll(rics);
+		} else {
+			String inputfilepath = "input/News_filtered_DE_1.1.xls";
+			List<Article> articles = XLSReader.getArticlesFromXlsFile(inputfilepath);
+			ricSet = RicProcessing.createRicSet(articles);
+			rics = new ArrayList<String>();
+			rics.addAll(ricSet);
+		}
 		
 		Calendar start = Calendar.getInstance();
 		start.set(2005, 3, 28);
@@ -29,7 +47,7 @@ public class GetStockDataApp {
 		
 	}
 	
-private static void getCourseFromYahoo(List<String> rics, Calendar start, Calendar end, Frequency frq) throws IOException{
+	public static void getCourseFromYahoo(List<String> rics, Calendar start, Calendar end, Frequency frq) throws IOException{
 		
 		// List of rics for which NO DATA could be found
 		List<String> nodata = new ArrayList<String>();

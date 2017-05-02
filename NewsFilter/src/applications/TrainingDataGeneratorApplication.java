@@ -27,11 +27,11 @@ public class TrainingDataGeneratorApplication {
 	
 		// getArticles
 		String inputfilepath = "input/News_filtered_DE_1.1.xls";
-		List<String> indices = FileUtils.fileToList("output/indices.txt");
 		List<Article> articles = XLSReader.getArticlesFromXlsFile(inputfilepath);
-		articles = RicProcessing.filterIndicesFromNews(articles, indices);
-		Set<String> ricSet = RicProcessing.createRicSet(articles);
 		
+		articles = RicProcessing.filterIndicesFromNews(articles);
+		Set<String> ricSet = RicProcessing.createRicSet(articles);
+	
 		// filterArticles: just one RIC
 //		List<Article> singleTopicArticles = new ArrayList<Article>();
 //		for(Article article : articles){
